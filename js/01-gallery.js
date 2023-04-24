@@ -1,7 +1,11 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-const createGalleryMarkup = galleryItems
+const refs = {
+  list: document.querySelector(".gallery"),
+};
+
+const creatingGalleryMarkup = galleryItems
   .map(
     (info) => `<li class="gallery__item">
   <a class="gallery__link" href="${info.original}">
@@ -16,19 +20,36 @@ const createGalleryMarkup = galleryItems
   )
   .join("");
 
-const refs = {
-  list: document.querySelector(".gallery"),
-  image: document.querySelector(".gallery__image"),
-};
+refs.list.insertAdjacentHTML("afterbegin", creatingGalleryMarkup);
 
-console.log(refs.list);
-refs.list.insertAdjacentHTML("afterbegin", createGalleryMarkup);
-
-refs.image.addEventListener("click", onImageClick);
+refs.list.addEventListener("click", onImageClick);
 
 function onImageClick(event) {
-  event.currentTarget.preventDefault();
-}
-// function createGalleryMarkup(galleryItems) {}
+  event.preventDefault();
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
 
-// console.log(galleryItems);
+  const instance = basicLightbox.create(
+    `
+    <img src="${event.target.dataset.source}" width="800" height="600">
+`,
+    {
+      onShow: () => {
+        window.addEventListener("keydown", onEscClickClose);
+      },
+
+      onClose: () => {
+        window.removeEventListener("keydown", onEscClickClose);
+      },
+    }
+  );
+
+  instance.show();
+
+  function onEscClickClose(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  }
+}

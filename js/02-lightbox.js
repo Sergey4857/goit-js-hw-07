@@ -2,10 +2,9 @@ import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 const refs = {
   list: document.querySelector(".gallery"),
-  image: document.querySelector(".gallery__image"),
 };
 
-const createGalleryMarkup = galleryItems
+const creatingGalleryMarkup = galleryItems
   .map(
     (info) => `<li class="gallery__item">
   <a class="gallery__link" href="${info.original}">
@@ -19,11 +18,10 @@ const createGalleryMarkup = galleryItems
   )
   .join("");
 
-refs.list.insertAdjacentHTML("afterbegin", createGalleryMarkup);
+refs.list.insertAdjacentHTML("afterbegin", creatingGalleryMarkup);
 
-refs.image.addEventListener("click", onImageClick);
-
-function onImageClick(event) {
-  event.currentTarget.preventDefault();
-}
-console.log(galleryItems);
+new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
+  captionPosition: "bottom",
+  captionDelay: 250,
+});
